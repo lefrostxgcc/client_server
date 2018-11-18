@@ -7,16 +7,16 @@
 
 int main(int argc, char *argv[]) 
 {
+	char buf[] = "<h1>Java</h1>\n";
 	struct sockaddr_in channel;
-	socklen_t channel_len;
 	int server_fd;
+	int client_socket;
 	int opt;
-	int new_socket;
+	int count;
 
 	opt = 1;
-	channel_len = sizeof(channel);
 	channel.sin_family = AF_INET;
-	channel.sin_addr.s_addr = INADDR_ANY;
+	channel.sin_addr.s_addr = htonl(INADDR_ANY);
 	channel.sin_port = htons(8000);
 
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -40,15 +40,21 @@ int main(int argc, char *argv[])
 		perror("listen");
 		exit(EXIT_FAILURE);
 	}
-	if ((new_socket = accept(server_fd, (struct sockaddr *) &channel,
-		&channel_len)) < 0) 
-	{ 
-		perror("accept");
-		exit(EXIT_FAILURE);
-	}
 
-	close(new_socket);
-	close(server_fd);
+	count = 0;
+	while (1)
+	{
+		client_socket = accept(server_fd, 0, 0);
+		if (client_socket < 0)
+		{
+			perror("accept");
+			exit(EXIT_FAILURE);
+		}
+		count++;
+		printf("Client accepted %d\n", count);
+		write(client_socket, buf, sizeof(buf)-1);
+		close(client_socket);
+	}
 
 	return 0; 
 } 
