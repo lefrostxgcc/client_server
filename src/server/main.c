@@ -7,12 +7,13 @@
 
 int main(int argc, char *argv[]) 
 {
-	char buf[] = "<h1>Java</h1>\n";
+	char buf[256] = {};
 	struct sockaddr_in channel;
 	int server_fd;
 	int client_socket;
 	int opt;
 	int count;
+	int buf_written_len;
 
 	opt = 1;
 	channel.sin_family = AF_INET;
@@ -52,7 +53,9 @@ int main(int argc, char *argv[])
 		}
 		count++;
 		printf("Client accepted %d\n", count);
-		write(client_socket, buf, sizeof(buf)-1);
+		buf_written_len = snprintf(buf, sizeof(buf)/sizeof(buf[0]),
+			"You are client #%d", count);
+		write(client_socket, buf, buf_written_len);
 		close(client_socket);
 	}
 
