@@ -58,10 +58,11 @@ static int create_server_socket(int port, int backlog)
 
 static void accept_clients(int server_socket)
 {
-	char	buf[256] = {};
+	char	buf[256];
 	int		client_socket;
 	int		count;
-	int		buf_written_len;
+	int		bytes_read;
+	int		out_msg_len;
 
 	count = 0;
 	while (1)
@@ -74,9 +75,15 @@ static void accept_clients(int server_socket)
 		}
 		count++;
 		printf("Client accepted %d\n", count);
-		buf_written_len = snprintf(buf, sizeof(buf)/sizeof(buf[0]),
-			"You are client #%d", count);
-		write(client_socket, buf, buf_written_len);
+		bytes_read = read(client_socket, buf, sizeof(buf) / sizeof(buf[0]));
+		if (bytes_read < 0)
+		{
+			perror("read");
+			exit(EXIT_FAILURE);
+		}
+		out_msg_len = snprintf(buf, sizeof(buf)/sizeof(buf[0]),
+			"#%d your message length is %d\n", count, bytes_read);
+		write(client_socket, buf, out_msg_len);
 		close(client_socket);
 	}
 }

@@ -51,13 +51,21 @@ static int create_client_socket(const char *address, int port)
 
 static void	interact_with_server(int client_socket)
 {
-	char		buf[256] = {};
+	char		inbuf[256];
+	const char	outbuf[] = "Get me some information";
+	int			bytes_read;
 
-	if (read(client_socket, buf, sizeof(buf) / sizeof(buf[0])) < 0)
+	if (write(client_socket, outbuf, sizeof(outbuf)/sizeof(outbuf[0]) - 1) < 0)
+	{
+		perror("write");
+		exit(EXIT_FAILURE);
+	}
+	bytes_read = read(client_socket, inbuf, sizeof(inbuf) / sizeof(inbuf[0]));
+	if (bytes_read < 0)
 	{
 		perror("read");
 		exit(EXIT_FAILURE);
 	}
-
-	printf("%s\n", buf);
+	inbuf[bytes_read] = '\0';
+	printf("%s\n", inbuf);
 }
