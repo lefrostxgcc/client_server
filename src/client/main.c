@@ -7,21 +7,14 @@
 #include <stdlib.h>
 
 static int create_client_socket(const char *address, int port);
+static void	interact_with_server(int client_socket);
 
 int main(int argc, char *argv[]) 
 {
-	char		buf[256] = {};
 	int			client_socket;
 
 	client_socket = create_client_socket("127.0.0.1", 8000);
-
-	if (read(client_socket, buf, sizeof(buf) / sizeof(buf[0])) < 0)
-	{
-		perror("read");
-		exit(EXIT_FAILURE);
-	}
-
-	printf("%s\n", buf);
+	interact_with_server(client_socket);
 	close(client_socket);
 
 	return 0; 
@@ -54,4 +47,17 @@ static int create_client_socket(const char *address, int port)
 	}
 
 	return client_socket;
+}
+
+static void	interact_with_server(int client_socket)
+{
+	char		buf[256] = {};
+
+	if (read(client_socket, buf, sizeof(buf) / sizeof(buf[0])) < 0)
+	{
+		perror("read");
+		exit(EXIT_FAILURE);
+	}
+
+	printf("%s\n", buf);
 }
