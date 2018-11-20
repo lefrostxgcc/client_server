@@ -81,6 +81,7 @@ static void accept_clients(int server_socket)
 			perror("read");
 			exit(EXIT_FAILURE);
 		}
+		sleep(3);
 		out_msg_len = snprintf(buf, sizeof(buf)/sizeof(buf[0]),
 			"#%d your message length is %d\n", count, bytes_read);
 		write(client_socket, buf, out_msg_len);
