@@ -7,33 +7,15 @@
 #include <stdlib.h>
 
 static int create_server_socket(int port, int backlog);
+static void accept_clients(int server_socket);
 
 int main(int argc, char *argv[]) 
 {
-	char	buf[256] = {};
 	int		server_socket;
-	int		client_socket;
-	int		count;
-	int		buf_written_len;
 
 	server_socket = create_server_socket(8000, 10);
-
-	count = 0;
-	while (1)
-	{
-		client_socket = accept(server_socket, 0, 0);
-		if (client_socket < 0)
-		{
-			perror("accept");
-			exit(EXIT_FAILURE);
-		}
-		count++;
-		printf("Client accepted %d\n", count);
-		buf_written_len = snprintf(buf, sizeof(buf)/sizeof(buf[0]),
-			"You are client #%d", count);
-		write(client_socket, buf, buf_written_len);
-		close(client_socket);
-	}
+	accept_clients(server_socket);
+	close(server_socket);
 
 	return 0; 
 }
@@ -74,30 +56,27 @@ static int create_server_socket(int port, int backlog)
 	return server_socket;
 }
 
+static void accept_clients(int server_socket)
+{
+	char	buf[256] = {};
+	int		client_socket;
+	int		count;
+	int		buf_written_len;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	count = 0;
+	while (1)
+	{
+		client_socket = accept(server_socket, 0, 0);
+		if (client_socket < 0)
+		{
+			perror("accept");
+			exit(EXIT_FAILURE);
+		}
+		count++;
+		printf("Client accepted %d\n", count);
+		buf_written_len = snprintf(buf, sizeof(buf)/sizeof(buf[0]),
+			"You are client #%d", count);
+		write(client_socket, buf, buf_written_len);
+		close(client_socket);
+	}
+}
