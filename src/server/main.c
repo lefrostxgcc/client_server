@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
+	printf("Server started\n");
 	count = 0;
 	while (1)
 	{
