@@ -9,10 +9,7 @@
 int main(int argc, char *argv[]) 
 {
 	const char header_fmt[] = 
-		"HTTP/1.x 200 OK\r\n"
-		"Cache-Control: no-cache\r\n"
-		"Connection: close\r\n"
-		"Server: videosharp\r\n"
+		"HTTP/1.0 200 OK\r\n"
 		"Content-Length: %d\r\n"
 		"Content-Type: text/html; charset=UTF-8\r\n"
 		"\r\n";
