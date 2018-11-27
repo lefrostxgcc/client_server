@@ -7,7 +7,11 @@
 
 int main(int argc, char *argv[]) 
 {
-	char buf[] = "<h1>Java</h1>\n";
+	char buf[] =
+		"HTTP/1.0 200 OK\n"
+		"Content-type: text/html\n"
+		"\n"
+		"<h1>Java</h1>\n";
 	struct sockaddr_in channel;
 	int server_fd;
 	int client_socket;
