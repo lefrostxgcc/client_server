@@ -4,23 +4,32 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main(int argc, char *argv[]) 
 {
-	char buf[] =
+	const char header_fmt[] = 
 		"HTTP/1.x 200 OK\r\n"
 		"Cache-Control: no-cache\r\n"
 		"Connection: close\r\n"
 		"Server: videosharp\r\n"
-		"Content-Length: 15\r\n"
+		"Content-Length: %d\r\n"
 		"Content-Type: text/html; charset=UTF-8\r\n"
-		"\r\n"
-		"<h1>Java</h1>\r\n";
+		"\r\n";
+
+	const char msg_fmt[] = "<h1>Java %d</h1>\r\n";
+
+	char buf[sizeof(header_fmt) + sizeof(msg_fmt) + 40];
+	char header_buf[sizeof(header_fmt) + 20];
+	char msg_buf[sizeof(msg_fmt) + 20];
 	struct sockaddr_in channel;
 	int server_fd;
 	int client_socket;
 	int opt;
 	int count;
+	int header_len;
+	int content_len;
+	int responce_len;
 
 	opt = 1;
 	channel.sin_family = AF_INET;
@@ -61,7 +70,11 @@ int main(int argc, char *argv[])
 		}
 		count++;
 		printf("Client accepted %d\n", count);
-		write(client_socket, buf, sizeof(buf)-1);
+		content_len = snprintf(msg_buf, sizeof(msg_buf), msg_fmt, count);
+		header_len = snprintf(header_buf, sizeof(header_buf),
+			header_fmt, content_len);
+		responce_len = snprintf(buf, sizeof(buf), "%s%s", header_buf, msg_buf);
+		write(client_socket, buf, responce_len);
 		close(client_socket);
 	}
 
