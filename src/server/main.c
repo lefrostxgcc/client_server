@@ -8,10 +8,14 @@
 int main(int argc, char *argv[]) 
 {
 	char buf[] =
-		"HTTP/1.0 200 OK\n"
-		"Content-type: text/html\n"
-		"\n"
-		"<h1>Java</h1>\n";
+		"HTTP/1.x 200 OK\r\n"
+		"Cache-Control: no-cache\r\n"
+		"Connection: close\r\n"
+		"Server: videosharp\r\n"
+		"Content-Length: 15\r\n"
+		"Content-Type: text/html; charset=UTF-8\r\n"
+		"\r\n"
+		"<h1>Java</h1>\r\n";
 	struct sockaddr_in channel;
 	int server_fd;
 	int client_socket;
